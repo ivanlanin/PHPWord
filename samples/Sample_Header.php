@@ -1,27 +1,27 @@
 <?php
-/**
- * Header file
- */
-use PhpOffice\PhpWord\Autoloader;
+require_once __DIR__ . '/../bootstrap.php';
+
 use PhpOffice\PhpWord\Settings;
 
+date_default_timezone_set('UTC');
 error_reporting(E_ALL);
 define('CLI', (PHP_SAPI == 'cli') ? true : false);
 define('EOL', CLI ? PHP_EOL : '<br />');
 define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
 define('IS_INDEX', SCRIPT_FILENAME == 'index');
 
-require_once __DIR__ . '/../src/PhpWord/Autoloader.php';
-Autoloader::register();
 Settings::loadConfig();
 
 // Set writers
 $writers = array('Word2007' => 'docx', 'ODText' => 'odt', 'RTF' => 'rtf', 'HTML' => 'html', 'PDF' => 'pdf');
 
 // Set PDF renderer
-if (Settings::getPdfRendererPath() === null) {
+if (null === Settings::getPdfRendererPath()) {
     $writers['PDF'] = null;
 }
+
+// Turn output escaping on
+Settings::setOutputEscapingEnabled(true);
 
 // Return to the caller script when runs by CLI
 if (CLI) {
@@ -52,6 +52,8 @@ if ($handle = opendir('.')) {
  * @param \PhpOffice\PhpWord\PhpWord $phpWord
  * @param string $filename
  * @param array $writers
+ *
+ * @return string
  */
 function write($phpWord, $filename, $writers)
 {
@@ -60,7 +62,7 @@ function write($phpWord, $filename, $writers)
     // Write documents
     foreach ($writers as $format => $extension) {
         $result .= date('H:i:s') . " Write to {$format} format";
-        if ($extension !== null) {
+        if (null !== $extension) {
             $targetFile = __DIR__ . "/results/{$filename}.{$extension}";
             $phpWord->save($targetFile, $format);
         } else {
@@ -78,6 +80,8 @@ function write($phpWord, $filename, $writers)
  * Get ending notes
  *
  * @param array $writers
+ *
+ * @return string
  */
 function getEndingNotes($writers)
 {

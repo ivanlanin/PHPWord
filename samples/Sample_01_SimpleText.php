@@ -2,10 +2,15 @@
 include_once 'Sample_Header.php';
 
 // New Word Document
-echo date('H:i:s') , " Create new PhpWord object" , EOL;
+echo date('H:i:s') , ' Create new PhpWord object' , EOL;
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
-$phpWord->addFontStyle('rStyle', array('bold' => true, 'italic' => true, 'size' => 16, 'allCaps' => true, 'doubleStrikethrough' => true));
-$phpWord->addParagraphStyle('pStyle', array('align' => 'center', 'spaceAfter' => 100));
+
+$fontStyleName = 'rStyle';
+$phpWord->addFontStyle($fontStyleName, array('bold' => true, 'italic' => true, 'size' => 16, 'allCaps' => true, 'doubleStrikethrough' => true));
+
+$paragraphStyleName = 'pStyle';
+$phpWord->addParagraphStyle($paragraphStyleName, array('alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'spaceAfter' => 100));
+
 $phpWord->addTitleStyle(1, array('bold' => true), array('spaceAfter' => 240));
 
 // New portrait section
@@ -18,10 +23,10 @@ $section->addText('Hello World!');
 // Two text break
 $section->addTextBreak(2);
 
-// Defined style
-$section->addText('I am styled by a font style definition.', 'rStyle');
-$section->addText('I am styled by a paragraph style definition.', null, 'pStyle');
-$section->addText('I am styled by both font and paragraph style.', 'rStyle', 'pStyle');
+// Define styles
+$section->addText('I am styled by a font style definition.', $fontStyleName);
+$section->addText('I am styled by a paragraph style definition.', null, $paragraphStyleName);
+$section->addText('I am styled by both font and paragraph style.', $fontStyleName, $paragraphStyleName);
 
 $section->addTextBreak();
 
@@ -62,7 +67,7 @@ $textrun->addText('kerning', array('kerning' => 10));
 $textrun->addText('. ');
 
 // Link
-$section->addLink('http://www.google.com', 'Google');
+$section->addLink('https://github.com/PHPOffice/PHPWord', 'PHPWord on GitHub');
 $section->addTextBreak();
 
 // Image

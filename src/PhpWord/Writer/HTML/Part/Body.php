@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -72,7 +72,7 @@ class Body extends AbstractPart
                 $method = 'get' . ($noteType == 'endnote' ? 'Endnotes' : 'Footnotes');
                 $collection = $phpWord->$method()->getItems();
 
-                if (array_key_exists($noteTypeId, $collection)) {
+                if (isset($collection[$noteTypeId])) {
                     $element = $collection[$noteTypeId];
                     $noteAnchor = "<a name=\"note-{$noteId}\" />";
                     $noteAnchor .= "<a href=\"#{$noteMark}\" class=\"NoteRef\"><sup>{$noteId}</sup></a>";

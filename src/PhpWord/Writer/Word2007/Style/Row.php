@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -30,7 +30,9 @@ class Row extends AbstractStyle
     private $height;
 
     /**
-     * Write style
+     * Write style.
+     *
+     * @return void
      */
     public function write()
     {
@@ -55,9 +57,10 @@ class Row extends AbstractStyle
     }
 
     /**
-     * Set height
+     * Set height.
      *
      * @param int $value
+     * @return void
      */
     public function setHeight($value = null)
     {

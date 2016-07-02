@@ -11,14 +11,14 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Reader;
 
+use PhpOffice\Common\XMLReader;
 use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\Shared\XMLReader;
 use PhpOffice\PhpWord\Shared\ZipArchive;
 
 /**
@@ -63,7 +63,7 @@ class Word2007 extends AbstractReader implements ReaderInterface
             $stepItems = $step['stepItems'];
             foreach ($relationships[$stepPart] as $relItem) {
                 $relType = $relItem['type'];
-                if (array_key_exists($relType, $stepItems)) {
+                if (isset($stepItems[$relType])) {
                     $partName = $stepItems[$relType];
                     $xmlFile = $relItem['target'];
                     $this->readPart($phpWord, $relationships, $partName, $docFile, $xmlFile);
@@ -75,15 +75,16 @@ class Word2007 extends AbstractReader implements ReaderInterface
     }
 
     /**
-     * Read document part
+     * Read document part.
      *
      * @param \PhpOffice\PhpWord\PhpWord $phpWord
      * @param array $relationships
      * @param string $partName
      * @param string $docFile
      * @param string $xmlFile
+     * @return void
      */
-    private function readPart(PhpWord &$phpWord, $relationships, $partName, $docFile, $xmlFile)
+    private function readPart(PhpWord $phpWord, $relationships, $partName, $docFile, $xmlFile)
     {
         $partClass = "PhpOffice\\PhpWord\\Reader\\Word2007\\{$partName}";
         if (class_exists($partClass)) {

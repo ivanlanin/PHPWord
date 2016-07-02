@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -26,8 +26,9 @@ use PhpOffice\PhpWord\Style\Line as LineStyle;
 class Line extends Frame
 {
     /**
-     * Write Line stroke
+     * Write Line stroke.
      *
+     * @return void
      * @todo Merge with `Stroke` style
      */
     public function writeStroke()
@@ -57,7 +58,7 @@ class Line extends Frame
         $xmlWriter->writeAttributeIf($style->getEndArrow() !== null, 'endarrow', $style->getEndArrow());
 
         if ($dash !== null) {
-            if (array_key_exists($dash, $dashStyles)) {
+            if (isset($dashStyles[$dash])) {
                 $xmlWriter->writeAttribute('dashstyle', $dashStyles[$dash]);
             }
             if ($dash == LineStyle::DASH_STYLE_ROUND_DOT) {

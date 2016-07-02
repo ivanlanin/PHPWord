@@ -11,14 +11,14 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\Word2007\Part;
 
+use PhpOffice\Common\XMLWriter;
 use PhpOffice\PhpWord\Exception\Exception;
-use PhpOffice\PhpWord\Shared\XMLWriter;
 
 /**
  * Word2007 main relationship writer: _rels/.rels
@@ -47,12 +47,13 @@ class Rels extends AbstractPart
     }
 
     /**
-     * Write relationships
+     * Write relationships.
      *
-     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
      * @param array $xmlRels
      * @param array $mediaRels
      * @param int $relId
+     * @return void
      */
     protected function writeRels(XMLWriter $xmlWriter, $xmlRels = array(), $mediaRels = array(), $relId = 1)
     {
@@ -74,11 +75,12 @@ class Rels extends AbstractPart
     }
 
     /**
-     * Write media relationships
+     * Write media relationships.
      *
-     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
      * @param int $relId
      * @param array $mediaRel
+     * @return void
      */
     private function writeMediaRel(XMLWriter $xmlWriter, $relId, $mediaRel)
     {
@@ -87,8 +89,8 @@ class Rels extends AbstractPart
         $targetMapping = array('image' => 'media/', 'object' => 'embeddings/');
 
         $mediaType = $mediaRel['type'];
-        $type = array_key_exists($mediaType, $typeMapping) ? $typeMapping[$mediaType] : $mediaType;
-        $targetPrefix = array_key_exists($mediaType, $targetMapping) ? $targetMapping[$mediaType] : '';
+        $type = isset($typeMapping[$mediaType]) ? $typeMapping[$mediaType] : $mediaType;
+        $targetPrefix = isset($targetMapping[$mediaType]) ? $targetMapping[$mediaType] : '';
         $target = $mediaRel['target'];
         $targetMode = ($type == 'hyperlink') ? 'External' : '';
 
@@ -96,16 +98,19 @@ class Rels extends AbstractPart
     }
 
     /**
-     * Write individual rels entry
+     * Write individual rels entry.
      *
      * Format:
      * <Relationship Id="rId..." Type="http://..." Target="....xml" TargetMode="..." />
      *
-     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
      * @param int $relId Relationship ID
      * @param string $type Relationship type
      * @param string $target Relationship target
      * @param string $targetMode Relationship target mode
+     *
+     * @return void
+     *
      * @throws \PhpOffice\PhpWord\Exception\Exception
      */
     private function writeRel(XMLWriter $xmlWriter, $relId, $type, $target, $targetMode = '')

@@ -11,15 +11,15 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\Word2007\Style;
 
-use PhpOffice\PhpWord\Shared\XMLWriter;
-use PhpOffice\PhpWord\Style\Alignment as AlignmentStyle;
+use PhpOffice\Common\XMLWriter;
 use PhpOffice\PhpWord\Style\Frame as FrameStyle;
+use PhpOffice\PhpWord\Writer\Word2007\Element\ParagraphAlignment;
 
 /**
  * Frame style writer
@@ -29,7 +29,9 @@ use PhpOffice\PhpWord\Style\Frame as FrameStyle;
 class Frame extends AbstractStyle
 {
     /**
-     * Write style
+     * Write style.
+     *
+     * @return void
      */
     public function write()
     {
@@ -62,7 +64,7 @@ class Frame extends AbstractStyle
 
        // zIndex for infront & behind wrap
         $wrap = $style->getWrap();
-        if ($wrap !== null && array_key_exists($wrap, $zIndices)) {
+        if ($wrap !== null && isset($zIndices[$wrap])) {
             $styles['z-index'] = $zIndices[$wrap];
             $wrap = null;
         }
@@ -74,7 +76,9 @@ class Frame extends AbstractStyle
     }
 
     /**
-     * Write alignment
+     * Write alignment.
+     *
+     * @return void
      */
     public function writeAlignment()
     {
@@ -85,17 +89,26 @@ class Frame extends AbstractStyle
 
         $xmlWriter = $this->getXmlWriter();
         $xmlWriter->startElement('w:pPr');
-        $styleWriter = new Alignment($xmlWriter, new AlignmentStyle(array('value' => $style->getAlign())));
-        $styleWriter->write();
-        $xmlWriter->endElement(); // w:pPr
+
+        if ('' !== $style->getAlignment()) {
+            $paragraphAlignment = new ParagraphAlignment($style->getAlignment());
+            $xmlWriter->startElement($paragraphAlignment->getName());
+            foreach ($paragraphAlignment->getAttributes() as $attributeName => $attributeValue) {
+                $xmlWriter->writeAttribute($attributeName, $attributeValue);
+            }
+            $xmlWriter->endElement();
+        }
+
+        $xmlWriter->endElement();
     }
 
     /**
-     * Write alignment
+     * Write wrap.
      *
-     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
      * @param \PhpOffice\PhpWord\Style\Frame $style
      * @param string $wrap
+     * @return void
      */
     private function writeWrap(XMLWriter $xmlWriter, FrameStyle $style, $wrap)
     {
@@ -119,10 +132,10 @@ class Frame extends AbstractStyle
                 $xmlWriter->writeAttribute('anchorx', "page");
                 $xmlWriter->writeAttribute('anchory', "page");
             } elseif ($pos == FrameStyle::POS_RELATIVE) {
-                if (array_key_exists($hPos, $relativePositions)) {
+                if (isset($relativePositions[$hPos])) {
                     $xmlWriter->writeAttribute('anchorx', $relativePositions[$hPos]);
                 }
-                if (array_key_exists($vPos, $relativePositions)) {
+                if (isset($relativePositions[$vPos])) {
                     $xmlWriter->writeAttribute('anchory', $relativePositions[$vPos]);
                 }
             }

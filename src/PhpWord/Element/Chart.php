@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -80,9 +80,10 @@ class Chart extends AbstractElement
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $value
+     * @return void
      */
     public function setType($value)
     {
@@ -95,6 +96,7 @@ class Chart extends AbstractElement
      *
      * @param array $categories
      * @param array $values
+     * @return void
      */
     public function addSeries($categories, $values)
     {

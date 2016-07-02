@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -51,7 +51,7 @@ class Table extends AbstractElement
                     $cellTag = $tblHeader ? 'th' : 'td';
                     $content .= "<{$cellTag}>" . PHP_EOL;
                     $content .= $writer->write();
-                    $content .= '</td>' . PHP_EOL;
+                    $content .= "</{$cellTag}>" . PHP_EOL;
                 }
                 $content .= '</tr>' . PHP_EOL;
             }

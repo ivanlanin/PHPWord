@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -22,6 +22,7 @@ namespace PhpOffice\PhpWord\Element;
  *
  * @method Text addText(string $text, mixed $fStyle = null, mixed $pStyle = null)
  * @method TextRun addTextRun(mixed $pStyle = null)
+ * @method Bookmark addBookmark(string $name)
  * @method Link addLink(string $target, string $text = null, mixed $fStyle = null, mixed $pStyle = null)
  * @method PreserveText addPreserveText(string $text, mixed $fStyle = null, mixed $pStyle = null)
  * @method void addTextBreak(int $count = 1, mixed $fStyle = null, mixed $pStyle = null)
@@ -40,7 +41,7 @@ namespace PhpOffice\PhpWord\Element;
  * @method TextBox addTextBox(mixed $style = null)
  * @method Field addField(string $type = null, array $properties = array(), array $options = array())
  * @method Line addLine(mixed $lineStyle = null)
- * @method Shape addObject(string $type, mixed $style = null)
+ * @method Shape addShape(string $type, mixed $style = null)
  * @method Chart addChart(string $type, array $categories, array $values, array $style = null)
  * @method FormField addFormField(string $type, mixed $fStyle = null, mixed $pStyle = null)
  * @method SDT addSDT(string $type)
@@ -77,18 +78,22 @@ abstract class AbstractContainer extends AbstractElement
      */
     public function __call($function, $args)
     {
-        $elements = array('Text', 'TextRun', 'Link', 'PreserveText', 'TextBreak',
-            'ListItem', 'ListItemRun', 'Table', 'Image', 'Object', 'Footnote',
-            'Endnote', 'CheckBox', 'TextBox', 'Field', 'Line', 'Shape',
-            'Title', 'TOC', 'PageBreak', 'Chart', 'FormField', 'SDT');
+        $elements = array(
+            'Text', 'TextRun', 'Bookmark', 'Link', 'PreserveText', 'TextBreak',
+            'ListItem', 'ListItemRun', 'Table', 'Image', 'Object',
+            'Footnote', 'Endnote', 'CheckBox', 'TextBox', 'Field',
+            'Line', 'Shape', 'Title', 'TOC', 'PageBreak',
+            'Chart', 'FormField', 'SDT'
+        );
         $functions = array();
-        for ($i = 0; $i < count($elements); $i++) {
-            $functions[$i] = 'add' . $elements[$i];
+        foreach ($elements as $element) {
+            $functions['add' . strtolower($element)] = $element;
         }
 
         // Run valid `add` command
-        if (in_array($function, $functions)) {
-            $element = str_replace('add', '', $function);
+        $function = strtolower($function);
+        if (isset($functions[$function])) {
+            $element = $functions[$function];
 
             // Special case for TextBreak
             // @todo Remove the `$count` parameter in 1.0.0 to make this element similiar to other elements?
@@ -153,6 +158,8 @@ abstract class AbstractContainer extends AbstractElement
      * Get all elements
      *
      * @return array
+     *
+     * @codeCoverageIgnore
      */
     public function getElements()
     {
@@ -173,27 +180,29 @@ abstract class AbstractContainer extends AbstractElement
      * Check if a method is allowed for the current container
      *
      * @param string $method
+     *
      * @return bool
+     *
      * @throws \BadMethodCallException
      */
     private function checkValidity($method)
     {
-        // Valid containers for each element
-        $allContainers = array(
-            'Section', 'Header', 'Footer', 'Footnote', 'Endnote',
-            'Cell', 'TextRun', 'TextBox', 'ListItemRun',
+        $generalContainers = array(
+            'Section', 'Header', 'Footer', 'Footnote', 'Endnote', 'Cell', 'TextRun', 'TextBox', 'ListItemRun',
         );
+
         $validContainers = array(
-            'Text'          => $allContainers,
-            'Link'          => $allContainers,
-            'TextBreak'     => $allContainers,
-            'Image'         => $allContainers,
-            'Object'        => $allContainers,
-            'Field'         => $allContainers,
-            'Line'          => $allContainers,
-            'Shape'         => $allContainers,
-            'FormField'     => $allContainers,
-            'SDT'           => $allContainers,
+            'Text'          => $generalContainers,
+            'Bookmark'      => $generalContainers,
+            'Link'          => $generalContainers,
+            'TextBreak'     => $generalContainers,
+            'Image'         => $generalContainers,
+            'Object'        => $generalContainers,
+            'Field'         => $generalContainers,
+            'Line'          => $generalContainers,
+            'Shape'         => $generalContainers,
+            'FormField'     => $generalContainers,
+            'SDT'           => $generalContainers,
             'TextRun'       => array('Section', 'Header', 'Footer', 'Cell', 'TextBox'),
             'ListItem'      => array('Section', 'Header', 'Footer', 'Cell', 'TextBox'),
             'ListItemRun'   => array('Section', 'Header', 'Footer', 'Cell', 'TextBox'),
@@ -208,6 +217,7 @@ abstract class AbstractContainer extends AbstractElement
             'PageBreak'     => array('Section'),
             'Chart'         => array('Section'),
         );
+
         // Special condition, e.g. preservetext can only exists in cell when
         // the cell is located in header or footer
         $validSubcontainers = array(
@@ -217,19 +227,20 @@ abstract class AbstractContainer extends AbstractElement
         );
 
         // Check if a method is valid for current container
-        if (array_key_exists($method, $validContainers)) {
+        if (isset($validContainers[$method])) {
             if (!in_array($this->container, $validContainers[$method])) {
-                throw new \BadMethodCallException("Cannot add $method in $this->container.");
+                throw new \BadMethodCallException("Cannot add {$method} in {$this->container}.");
             }
         }
+
         // Check if a method is valid for current container, located in other container
-        if (array_key_exists($method, $validSubcontainers)) {
+        if (isset($validSubcontainers[$method])) {
             $rules = $validSubcontainers[$method];
             $containers = $rules[0];
             $allowedDocParts = $rules[1];
             foreach ($containers as $container) {
                 if ($this->container == $container && !in_array($this->getDocPart(), $allowedDocParts)) {
-                    throw new \BadMethodCallException("Cannot add $method in $this->container.");
+                    throw new \BadMethodCallException("Cannot add {$method} in {$this->container}.");
                 }
             }
         }
@@ -240,10 +251,13 @@ abstract class AbstractContainer extends AbstractElement
     /**
      * Add memory image element
      *
+     * @deprecated 0.9.0
+     *
      * @param string $src
      * @param mixed $style
+     *
      * @return \PhpOffice\PhpWord\Element\Image
-     * @deprecated 0.9.0
+     *
      * @codeCoverageIgnore
      */
     public function addMemoryImage($src, $style = null)
@@ -254,9 +268,12 @@ abstract class AbstractContainer extends AbstractElement
     /**
      * Create textrun element
      *
-     * @param mixed $paragraphStyle
-     * @return \PhpOffice\PhpWord\Element\TextRun
      * @deprecated 0.10.0
+     *
+     * @param mixed $paragraphStyle
+     *
+     * @return \PhpOffice\PhpWord\Element\TextRun
+     *
      * @codeCoverageIgnore
      */
     public function createTextRun($paragraphStyle = null)
@@ -267,9 +284,12 @@ abstract class AbstractContainer extends AbstractElement
     /**
      * Create footnote element
      *
-     * @param mixed $paragraphStyle
-     * @return \PhpOffice\PhpWord\Element\Footnote
      * @deprecated 0.10.0
+     *
+     * @param mixed $paragraphStyle
+     *
+     * @return \PhpOffice\PhpWord\Element\Footnote
+     *
      * @codeCoverageIgnore
      */
     public function createFootnote($paragraphStyle = null)

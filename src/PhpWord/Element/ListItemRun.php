@@ -11,7 +11,7 @@
 * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
 *
 * @link        https://github.com/PHPOffice/PHPWord
-* @copyright   2010-2014 PHPWord contributors
+* @copyright   2010-2015 PHPWord contributors
 * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
 */
 
@@ -65,7 +65,9 @@ class ListItemRun extends TextRun
     }
 
     /**
-     * Get ListItem style
+     * Get ListItem style.
+     *
+     * @return \PhpOffice\PhpWord\Style\ListItem
      */
     public function getStyle()
     {
@@ -73,7 +75,9 @@ class ListItemRun extends TextRun
     }
 
      /**
-     * Get ListItem depth
+     * Get ListItem depth.
+      *
+      * @return int
      */
     public function getDepth()
     {

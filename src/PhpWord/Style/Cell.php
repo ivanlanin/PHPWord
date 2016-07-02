@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -94,7 +94,9 @@ class Cell extends Border
     private $shading;
 
     /**
-     * Get vertical align
+     * Get vertical align.
+     *
+     * @return string
      */
     public function getVAlign()
     {
@@ -116,7 +118,9 @@ class Cell extends Border
     }
 
     /**
-     * Get text direction
+     * Get text direction.
+     *
+     * @return string
      */
     public function getTextDirection()
     {
@@ -163,7 +167,9 @@ class Cell extends Border
     }
 
     /**
-     * Get grid span (colspan)
+     * Get grid span (colspan).
+     *
+     * @return integer
      */
     public function getGridSpan()
     {
@@ -184,7 +190,9 @@ class Cell extends Border
     }
 
     /**
-     * Get vertical merge (rowspan)
+     * Get vertical merge (rowspan).
+     *
+     * @return string
      */
     public function getVMerge()
     {
@@ -232,6 +240,7 @@ class Cell extends Border
      * Get default border color
      *
      * @deprecated 0.10.0
+     *
      * @codeCoverageIgnore
      */
     public function getDefaultBorderColor()

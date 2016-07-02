@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -19,6 +19,7 @@ namespace PhpOffice\PhpWord\Writer\HTML\Part;
 
 use PhpOffice\PhpWord\Exception\Exception;
 use PhpOffice\PhpWord\Writer\AbstractWriter;
+use Zend\Escaper\Escaper;
 
 /**
  * Abstract HTML part writer
@@ -35,6 +36,16 @@ abstract class AbstractPart
     private $parentWriter;
 
     /**
+     * @var \Zend\Escaper\Escaper
+     */
+    protected $escaper;
+    
+    public function __construct()
+    {
+        $this->escaper = new Escaper();
+    }
+    
+    /**
      * Write part
      *
      * @return string
@@ -42,9 +53,10 @@ abstract class AbstractPart
     abstract public function write();
 
     /**
-     * Set parent writer
+     * Set parent writer.
      *
      * @param \PhpOffice\PhpWord\Writer\AbstractWriter $writer
+     * @return void
      */
     public function setParentWriter(AbstractWriter $writer = null)
     {
@@ -55,6 +67,7 @@ abstract class AbstractPart
      * Get parent writer
      *
      * @return \PhpOffice\PhpWord\Writer\AbstractWriter
+     *
      * @throws \PhpOffice\PhpWord\Exception\Exception
      */
     public function getParentWriter()

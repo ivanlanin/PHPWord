@@ -11,13 +11,13 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\Word2007\Part;
 
-use PhpOffice\PhpWord\Shared\XMLWriter;
+use PhpOffice\Common\XMLWriter;
 use PhpOffice\PhpWord\Element\Chart as ChartElement;
 
 /**
@@ -59,7 +59,10 @@ class Chart extends AbstractPart
     private $options = array();
 
     /**
-     * Set chart element
+     * Set chart element.
+     *
+     * @param \PhpOffice\PhpWord\Element\Chart $element
+     * @return void
      */
     public function setElement(ChartElement $element)
     {
@@ -93,6 +96,8 @@ class Chart extends AbstractPart
      * Write chart
      *
      * @link http://www.datypic.com/sc/ooxml/t-draw-chart_CT_Chart.html
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
+     * @return void
      */
     private function writeChart(XMLWriter $xmlWriter)
     {
@@ -106,7 +111,7 @@ class Chart extends AbstractPart
     }
 
     /**
-     * Write plot area
+     * Write plot area.
      *
      * @link http://www.datypic.com/sc/ooxml/t-draw-chart_CT_PlotArea.html
      * @link http://www.datypic.com/sc/ooxml/t-draw-chart_CT_PieChart.html
@@ -116,6 +121,8 @@ class Chart extends AbstractPart
      * @link http://www.datypic.com/sc/ooxml/t-draw-chart_CT_AreaChart.html
      * @link http://www.datypic.com/sc/ooxml/t-draw-chart_CT_RadarChart.html
      * @link http://www.datypic.com/sc/ooxml/t-draw-chart_CT_ScatterChart.html
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
+     * @return void
      */
     private function writePlotArea(XMLWriter $xmlWriter)
     {
@@ -171,10 +178,11 @@ class Chart extends AbstractPart
     }
 
     /**
-     * Write series
+     * Write series.
      *
-     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
      * @param bool $scatter
+     * @return void
      */
     private function writeSeries(XMLWriter $xmlWriter, $scatter = false)
     {
@@ -209,11 +217,12 @@ class Chart extends AbstractPart
     }
 
     /**
-     * Write series items
+     * Write series items.
      *
-     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
      * @param string $type
      * @param array $values
+     * @return void
      */
     private function writeSeriesItem(XMLWriter $xmlWriter, $type, $values)
     {
@@ -232,11 +241,13 @@ class Chart extends AbstractPart
         foreach ($values as $value) {
             $xmlWriter->startElement('c:pt');
             $xmlWriter->writeAttribute('idx', $index);
-
-            $xmlWriter->startElement('c:v');
-            $xmlWriter->writeRaw($value);
-            $xmlWriter->endElement(); // c:v
-
+            if (\PhpOffice\PhpWord\Settings::isOutputEscapingEnabled()) {
+                $xmlWriter->writeElement('c:v', $value);
+            } else {
+                $xmlWriter->startElement('c:v');
+                $xmlWriter->writeRaw($value);
+                $xmlWriter->endElement();
+            }
             $xmlWriter->endElement(); // c:pt
             $index++;
         }
@@ -248,9 +259,10 @@ class Chart extends AbstractPart
     /**
      * Write axis
      *
-     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
-     * @param string $type
      * @link http://www.datypic.com/sc/ooxml/t-draw-chart_CT_CatAx.html
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
+     * @param string $type
+     * @return void
      */
     private function writeAxis(XMLWriter $xmlWriter, $type)
     {
@@ -290,9 +302,10 @@ class Chart extends AbstractPart
     /**
      * Write shape
      *
-     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
-     * @param bool $line
      * @link http://www.datypic.com/sc/ooxml/t-a_CT_ShapeProperties.html
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
+     * @param bool $line
+     * @return void
      */
     private function writeShape(XMLWriter $xmlWriter, $line = false)
     {

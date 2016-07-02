@@ -11,14 +11,14 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\Word2007\Element;
 
+use PhpOffice\Common\XMLWriter;
 use PhpOffice\PhpWord\Element\SDT as SDTElement;
-use PhpOffice\PhpWord\Shared\XMLWriter;
 
 /**
  * Structured document tag element writer
@@ -30,7 +30,9 @@ use PhpOffice\PhpWord\Shared\XMLWriter;
 class SDT extends Text
 {
     /**
-     * Write element
+     * Write element.
+     *
+     * @return void
      */
     public function write()
     {
@@ -56,9 +58,7 @@ class SDT extends Text
         // Content
         $xmlWriter->startElement('w:sdtContent');
         $xmlWriter->startElement('w:r');
-        $xmlWriter->startElement('w:t');
-        $xmlWriter->writeRaw('Pick value');
-        $xmlWriter->endElement(); // w:t
+        $xmlWriter->writeElement('w:t', 'Pick value');
         $xmlWriter->endElement(); // w:r
         $xmlWriter->endElement(); // w:sdtContent
 
@@ -68,9 +68,12 @@ class SDT extends Text
     }
 
     /**
-     * Write combo box
+     * Write combo box.
      *
      * @link http://www.datypic.com/sc/ooxml/t-w_CT_SdtComboBox.html
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
+     * @param \PhpOffice\PhpWord\Element\SDT $element
+     * @return void
      */
     private function writeComboBox(XMLWriter $xmlWriter, SDTElement $element)
     {
@@ -85,9 +88,12 @@ class SDT extends Text
     }
 
     /**
-     * Write drop down list
+     * Write drop down list.
      *
      * @link http://www.datypic.com/sc/ooxml/t-w_CT_SdtDropDownList.html
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
+     * @param \PhpOffice\PhpWord\Element\SDT $element
+     * @return void
      */
     private function writeDropDownList(XMLWriter $xmlWriter, SDTElement $element)
     {
@@ -95,9 +101,12 @@ class SDT extends Text
     }
 
     /**
-     * Write date
+     * Write date.
      *
      * @link http://www.datypic.com/sc/ooxml/t-w_CT_SdtDate.html
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
+     * @param \PhpOffice\PhpWord\Element\SDT $element
+     * @return void
      */
     private function writeDate(XMLWriter $xmlWriter, SDTElement $element)
     {

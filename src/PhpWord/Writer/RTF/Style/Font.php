@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -66,9 +66,11 @@ class Font extends AbstractStyle
     }
 
     /**
-     * Set font name index
+     * Set font name index.
+     *
      *
      * @param int $value
+     * @return void
      */
     public function setNameIndex($value = 0)
     {
@@ -76,9 +78,10 @@ class Font extends AbstractStyle
     }
 
     /**
-     * Set font color index
+     * Set font color index.
      *
      * @param int $value
+     * @return void
      */
     public function setColorIndex($value = 0)
     {

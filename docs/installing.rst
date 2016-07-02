@@ -8,52 +8,49 @@ Requirements
 
 Mandatory:
 
--  PHP 5.3+
--  PHP `Zip <http://php.net/manual/en/book.zip.php>`__ extension
--  PHP `XML
-   Parser <http://www.php.net/manual/en/xml.installation.php>`__
-   extension
+- PHP 5.3.3+
+- `XML Parser <http://www.php.net/manual/en/xml.installation.php>`__ extension
+- `Zend\\Escaper <http://framework.zend.com/manual/current/en/modules/zend.escaper.introduction.html>`__ component
+- Zend\\Stdlib component
+- `Zend\\Validator <http://framework.zend.com/manual/current/en/modules/zend.validator.html>`__ component
 
-Optional PHP extensions:
+Optional:
 
--  `GD <http://php.net/manual/en/book.image.php>`__
--  `XMLWriter <http://php.net/manual/en/book.xmlwriter.php>`__
--  `XSL <http://php.net/manual/en/book.xsl.php>`__
+- `Zip <http://php.net/manual/en/book.zip.php>`__ extension
+- `GD <http://php.net/manual/en/book.image.php>`__ extension
+- `XMLWriter <http://php.net/manual/en/book.xmlwriter.php>`__ extension
+- `XSL <http://php.net/manual/en/book.xsl.php>`__ extension
+- `dompdf <https://github.com/dompdf/dompdf>`__ library
 
 Installation
 ------------
 
-There are two ways to install PHPWord, i.e. via
-`Composer <http://getcomposer.org/>`__ or manually by downloading the
-library.
+PHPWord is installed via `Composer <https://getcomposer.org/>`__.
+You just need to `add dependency <https://getcomposer.org/doc/04-schema.md#package-links>`__ on PHPWord into your package.
 
-Using Composer
-~~~~~~~~~~~~~~
-
-To install via Composer, add the following lines to your
-``composer.json``:
+Example:
 
 .. code-block:: json
 
     {
         "require": {
-           "phpoffice/phpword": "dev-master"
+           "phpoffice/phpword": "v0.13.*"
         }
     }
 
-Manual install
-~~~~~~~~~~~~~~
+If you are a developer or if you want to help us with testing then fetch the latest branch for developers.
+Notice: all contributions must be done against the developer branch.
 
-To install manually, `download PHPWord package from
-github <https://github.com/PHPOffice/PHPWord/archive/master.zip>`__.
-Extract the package and put the contents to your machine. To use the
-library, include ``src/PhpWord/Autoloader.php`` in your script and
-invoke ``Autoloader::register``.
+Example:
 
-.. code-block:: php
+.. code-block:: json
 
-    require_once '/path/to/src/PhpWord/Autoloader.php';
-    \PhpOffice\PhpWord\Autoloader::register();
+    {
+        "require": {
+           "phpoffice/phpword": "dev-develop"
+        }
+    }
+
 
 Using samples
 -------------

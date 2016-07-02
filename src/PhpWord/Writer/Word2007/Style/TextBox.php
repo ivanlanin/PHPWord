@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -27,7 +27,9 @@ use PhpOffice\PhpWord\Style\TextBox as TextBoxStyle;
 class TextBox extends Frame
 {
     /**
-     * Writer inner margin
+     * Writer inner margin.
+     *
+     * @return void
      */
     public function writeInnerMargin()
     {
@@ -43,7 +45,9 @@ class TextBox extends Frame
     }
 
     /**
-     * Writer border
+     * Writer border.
+     *
+     * @return void
      */
     public function writeBorder()
     {

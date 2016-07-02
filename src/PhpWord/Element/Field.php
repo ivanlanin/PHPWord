@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -94,13 +94,15 @@ class Field extends AbstractElement
      * Set Field type
      *
      * @param string $type
+     *
      * @return string
+     *
      * @throws \InvalidArgumentException
      */
     public function setType($type = null)
     {
         if (isset($type)) {
-            if (array_key_exists($type, $this->fieldsArray)) {
+            if (isset($this->fieldsArray[$type])) {
                 $this->type = $type;
             } else {
                 throw new \InvalidArgumentException("Invalid type");
@@ -123,14 +125,16 @@ class Field extends AbstractElement
      * Set Field properties
      *
      * @param array $properties
+     *
      * @return self
+     *
      * @throws \InvalidArgumentException
      */
     public function setProperties($properties = array())
     {
         if (is_array($properties)) {
             foreach (array_keys($properties) as $propkey) {
-                if (!(array_key_exists($propkey, $this->fieldsArray[$this->type]['properties']))) {
+                if (!(isset($this->fieldsArray[$this->type]['properties'][$propkey]))) {
                     throw new \InvalidArgumentException("Invalid property");
                 }
             }
@@ -153,14 +157,16 @@ class Field extends AbstractElement
      * Set Field options
      *
      * @param array $options
+     *
      * @return self
+     *
      * @throws \InvalidArgumentException
      */
     public function setOptions($options = array())
     {
         if (is_array($options)) {
             foreach (array_keys($options) as $optionkey) {
-                if (!(array_key_exists($optionkey, $this->fieldsArray[$this->type]['options']))) {
+                if (!(isset($this->fieldsArray[$this->type]['options'][$optionkey]))) {
                     throw new \InvalidArgumentException("Invalid option");
                 }
             }

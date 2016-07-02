@@ -11,13 +11,13 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Element;
 
-use PhpOffice\PhpWord\Shared\String;
+use PhpOffice\Common\Text as CommonText;
 use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Paragraph;
 
@@ -62,6 +62,13 @@ class Link extends AbstractElement
     protected $mediaRelation = true;
 
     /**
+     * Has internal flag - anchor to internal bookmark
+     *
+     * @var bool
+     */
+    protected $internal = false;
+
+    /**
      * Create a new Link Element
      *
      * @param string $source
@@ -69,13 +76,13 @@ class Link extends AbstractElement
      * @param mixed $fontStyle
      * @param mixed $paragraphStyle
      */
-    public function __construct($source, $text = null, $fontStyle = null, $paragraphStyle = null)
+    public function __construct($source, $text = null, $fontStyle = null, $paragraphStyle = null, $internal = false)
     {
-        $this->source = String::toUTF8($source);
-        $this->text = is_null($text) ? $this->source : String::toUTF8($text);
+        $this->source = CommonText::toUTF8($source);
+        $this->text = is_null($text) ? $this->source : CommonText::toUTF8($text);
         $this->fontStyle = $this->setNewStyle(new Font('text'), $fontStyle);
         $this->paragraphStyle = $this->setNewStyle(new Paragraph(), $paragraphStyle);
-
+        $this->internal = $internal;
         return $this;
     }
 
@@ -122,8 +129,10 @@ class Link extends AbstractElement
     /**
      * Get link target
      *
-     * @return string
      * @deprecated 0.12.0
+     *
+     * @return string
+     *
      * @codeCoverageIgnore
      */
     public function getTarget()
@@ -134,8 +143,10 @@ class Link extends AbstractElement
     /**
      * Get Link source
      *
-     * @return string
      * @deprecated 0.10.0
+     *
+     * @return string
+     *
      * @codeCoverageIgnore
      */
     public function getLinkSrc()
@@ -146,12 +157,24 @@ class Link extends AbstractElement
     /**
      * Get Link name
      *
-     * @return string
      * @deprecated 0.10.0
+     *
+     * @return string
+     *
      * @codeCoverageIgnore
      */
     public function getLinkName()
     {
         return $this->getText();
+    }
+
+    /**
+     * is internal
+     *
+     * @return bool
+     */
+    public function isInternal()
+    {
+        return $this->internal;
     }
 }

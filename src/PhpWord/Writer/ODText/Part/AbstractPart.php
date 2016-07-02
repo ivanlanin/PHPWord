@@ -11,14 +11,14 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\ODText\Part;
 
+use PhpOffice\Common\XMLWriter;
 use PhpOffice\PhpWord\Settings;
-use PhpOffice\PhpWord\Shared\XMLWriter;
 use PhpOffice\PhpWord\Style;
 use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Writer\Word2007\Part\AbstractPart as Word2007AbstractPart;
@@ -34,7 +34,10 @@ abstract class AbstractPart extends Word2007AbstractPart
     protected $dateFormat = 'Y-m-d\TH:i:s.000';
 
     /**
-     * Write common root attributes
+     * Write common root attributes.
+     *
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
+     * @return void
      */
     protected function writeCommonRootAttributes(XMLWriter $xmlWriter)
     {
@@ -68,7 +71,10 @@ abstract class AbstractPart extends Word2007AbstractPart
     }
 
     /**
-     * Write font faces declaration
+     * Write font faces declaration.
+     *
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
+     * @return void
      */
     protected function writeFontFaces(XMLWriter $xmlWriter)
     {

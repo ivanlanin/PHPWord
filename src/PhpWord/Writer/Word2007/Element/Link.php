@@ -11,11 +11,13 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\Word2007\Element;
+
+use PhpOffice\PhpWord\Settings;
 
 /**
  * Link element writer
@@ -25,7 +27,9 @@ namespace PhpOffice\PhpWord\Writer\Word2007\Element;
 class Link extends Text
 {
     /**
-     * Write link element
+     * Write link element.
+     *
+     * @return void
      */
     public function write()
     {
@@ -40,7 +44,11 @@ class Link extends Text
         $this->startElementP();
 
         $xmlWriter->startElement('w:hyperlink');
-        $xmlWriter->writeAttribute('r:id', 'rId' . $rId);
+        if ($element->isInternal()) {
+            $xmlWriter->writeAttribute('w:anchor', $element->getSource());
+        } else {
+            $xmlWriter->writeAttribute('r:id', 'rId' . $rId);
+        }
         $xmlWriter->writeAttribute('w:history', '1');
         $xmlWriter->startElement('w:r');
 
@@ -48,7 +56,11 @@ class Link extends Text
 
         $xmlWriter->startElement('w:t');
         $xmlWriter->writeAttribute('xml:space', 'preserve');
-        $xmlWriter->writeRaw($element->getText());
+        if (Settings::isOutputEscapingEnabled()) {
+            $xmlWriter->text($element->getText());
+        } else {
+            $xmlWriter->writeRaw($element->getText());
+        }
         $xmlWriter->endElement(); // w:t
         $xmlWriter->endElement(); // w:r
         $xmlWriter->endElement(); // w:hyperlink

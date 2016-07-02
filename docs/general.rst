@@ -12,42 +12,73 @@ folder <https://github.com/PHPOffice/PHPWord/tree/master/samples/>`__.
 
 .. code-block:: php
 
-    require_once 'src/PhpWord/Autoloader.php';
-    \PhpOffice\PhpWord\Autoloader::register();
+    <?php
+    require_once 'bootstrap.php';
 
+    // Creating the new document...
     $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
-    // Every element you want to append to the word document is placed in a section.
-    // To create a basic section:
+    /* Note: any element you append to a document must reside inside of a Section. */
+
+    // Adding an empty Section to the document...
     $section = $phpWord->addSection();
-
-    // After creating a section, you can append elements:
-    $section->addText('Hello world!');
-
-    // You can directly style your text by giving the addText function an array:
-    $section->addText('Hello world! I am formatted.',
-        array('name'=>'Tahoma', 'size'=>16, 'bold'=>true));
-
-    // If you often need the same style again you can create a user defined style
-    // to the word document and give the addText function the name of the style:
-    $phpWord->addFontStyle('myOwnStyle',
-        array('name'=>'Verdana', 'size'=>14, 'color'=>'1B2232'));
-    $section->addText('Hello world! I am formatted by a user defined style',
-        'myOwnStyle');
-
-    // You can also put the appended element to local object like this:
-    $fontStyle = array(
-        'name' => 'Verdana',
-        'size' => 22,
-        'bold' => true,
+    // Adding Text element to the Section having font styled by default...
+    $section->addText(
+        '"Learn from yesterday, live for today, hope for tomorrow. '
+            . 'The important thing is not to stop questioning." '
+            . '(Albert Einstein)'
     );
-    $myTextElement = $section->addText('Hello World!');
+
+    /*
+     * Note: it's possible to customize font style of the Text element you add in three ways:
+     * - inline;
+     * - using named font style (new font style object will be implicitly created);
+     * - using explicitly created font style object.
+     */
+
+    // Adding Text element with font customized inline...
+    $section->addText(
+        '"Great achievement is usually born of great sacrifice, '
+            . 'and is never the result of selfishness." '
+            . '(Napoleon Hill)',
+        array('name' => 'Tahoma', 'size' => 10)
+    );
+
+    // Adding Text element with font customized using named font style...
+    $fontStyleName = 'oneUserDefinedStyle';
+    $phpWord->addFontStyle(
+        $fontStyleName,
+        array('name' => 'Tahoma', 'size' => 10, 'color' => '1B2232', 'bold' => true)
+    );
+    $section->addText(
+        '"The greatest accomplishment is not in never falling, '
+            . 'but in rising again after you fall." '
+            . '(Vince Lombardi)',
+        $fontStyleName
+    );
+
+    // Adding Text element with font customized using explicitly created font style object...
+    $fontStyle = new \PhpOffice\PhpWord\Style\Font();
+    $fontStyle->setBold(true);
+    $fontStyle->setName('Tahoma');
+    $fontStyle->setSize(13);
+    $myTextElement = $section->addText('"Believe you can and you\'re halfway there." (Theodor Roosevelt)');
     $myTextElement->setFontStyle($fontStyle);
 
-    // Finally, save the document:
-    $phpWord->save('helloWorld.docx');
-    $phpWord->save('helloWorld.odt', 'ODText');
-    $phpWord->save('helloWorld.rtf', 'RTF');
+    // Saving the document as OOXML file...
+    $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+    $objWriter->save('helloWorld.docx');
+
+    // Saving the document as ODF file...
+    $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'ODText');
+    $objWriter->save('helloWorld.odt');
+
+    // Saving the document as HTML file...
+    $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
+    $objWriter->save('helloWorld.html');
+
+    /* Note: we skip RTF, because it's not XML-based and requires a different example. */
+    /* Note: we skip PDF, because "HTML-to-PDF" approach is used to create PDF documents. */
 
 Settings
 --------
@@ -75,19 +106,32 @@ during development to make the resulting XML file easier to read.
 Zip class
 ~~~~~~~~~
 
-By default, PHPWord uses PHP
-`ZipArchive <http://php.net/manual/en/book.zip.php>`__ to read or write
-ZIP compressed archive and the files inside them. If you can't have
-ZipArchive installed on your server, you can use pure PHP library
-alternative, `PCLZip <http://www.phpconcept.net/pclzip/>`__, which
+By default, PHPWord uses `Zip extension <http://php.net/manual/en/book.zip.php>`__
+to deal with ZIP compressed archives and files inside them. If you can't have
+Zip extension installed on your server, you can use pure PHP library
+alternative, `PclZip <http://www.phpconcept.net/pclzip/>`__, which
 included with PHPWord.
 
 .. code-block:: php
 
     \PhpOffice\PhpWord\Settings::setZipClass(\PhpOffice\PhpWord\Settings::PCLZIP);
 
+Output escaping
+~~~~~~~~~~~~~~~
+
+Writing documents of some formats, especially XML-based, requires correct output escaping.
+Without it your document may become broken when you put special characters like ampersand, quotes, and others in it.
+
+Escaping can be performed in two ways: outside of the library by a software developer and inside of the library by built-in mechanism.
+By default, the built-in mechanism is disabled for backward compatibility with versions prior to v0.13.0.
+To turn it on set ``outputEscapingEnabled`` option to ``true`` in your PHPWord configuration file or use the following instruction at runtime:
+
+.. code-block:: php
+
+    \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(true);
+
 Default font
-------------
+~~~~~~~~~~~~
 
 By default, every text appears in Arial 10 point. You can alter the
 default font by using the following two functions:
@@ -139,4 +183,3 @@ points to twips.
     $sectionStyle->setMarginLeft(\PhpOffice\PhpWord\Shared\Converter::inchToTwip(.5));
     // 2 cm right margin
     $sectionStyle->setMarginRight(\PhpOffice\PhpWord\Shared\Converter::cmToTwip(2));
-

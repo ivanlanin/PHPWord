@@ -11,36 +11,47 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord;
 
 use PhpOffice\PhpWord\Exception\Exception;
+use PhpOffice\PhpWord\Reader\ReaderInterface;
+use PhpOffice\PhpWord\Writer\WriterInterface;
 
-/**
- * IO Factory
- */
 abstract class IOFactory
 {
     /**
      * Create new writer
      *
-     * @param \PhpOffice\PhpWord\PhpWord $phpWord
+     * @param PhpWord $phpWord
      * @param string $name
-     * @return \PhpOffice\PhpWord\Writer\WriterInterface
+     *
+     * @return WriterInterface
+     *
+     * @throws \PhpOffice\PhpWord\Exception\Exception
      */
     public static function createWriter(PhpWord $phpWord, $name = 'Word2007')
     {
-        return self::createObject('Writer', $name, $phpWord);
+        if ($name !== 'WriterInterface' && !in_array($name, array('ODText', 'RTF', 'Word2007', 'HTML', 'PDF'), true)) {
+            throw new Exception("\"{$name}\" is not a valid writer.");
+        }
+
+        $fqName = "PhpOffice\\PhpWord\\Writer\\{$name}";
+
+        return new $fqName($phpWord);
     }
 
     /**
      * Create new reader
      *
      * @param string $name
-     * @return \PhpOffice\PhpWord\Reader\ReaderInterface
+     *
+     * @return ReaderInterface
+     *
+     * @throws Exception
      */
     public static function createReader($name = 'Word2007')
     {
@@ -53,7 +64,9 @@ abstract class IOFactory
      * @param string $type
      * @param string $name
      * @param \PhpOffice\PhpWord\PhpWord $phpWord
+     *
      * @return \PhpOffice\PhpWord\Writer\WriterInterface|\PhpOffice\PhpWord\Reader\ReaderInterface
+     *
      * @throws \PhpOffice\PhpWord\Exception\Exception
      */
     private static function createObject($type, $name, $phpWord = null)
@@ -65,7 +78,6 @@ abstract class IOFactory
             throw new Exception("\"{$name}\" is not a valid {$type}.");
         }
     }
-
     /**
      * Loads PhpWord from file
      *
@@ -77,10 +89,8 @@ abstract class IOFactory
     {
         /** @var \PhpOffice\PhpWord\Reader\ReaderInterface $reader */
         $reader = self::createReader($readerName);
-
         return $reader->load($filename);
     }
-
     /**
      * Check if it's a concrete class (not abstract nor interface)
      *
@@ -90,7 +100,6 @@ abstract class IOFactory
     private static function isConcreteClass($class)
     {
         $reflection = new \ReflectionClass($class);
-
         return !$reflection->isAbstract() && !$reflection->isInterface();
     }
 }

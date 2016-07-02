@@ -11,11 +11,13 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\Word2007\Element;
+
+use PhpOffice\PhpWord\Settings;
 
 /**
  * TextRun element writer
@@ -25,7 +27,9 @@ namespace PhpOffice\PhpWord\Writer\Word2007\Element;
 class Title extends AbstractElement
 {
     /**
-     * Write title element
+     * Write title element.
+     *
+     * @return void
      */
     public function write()
     {
@@ -48,23 +52,28 @@ class Title extends AbstractElement
         }
 
         $rId = $element->getRelationId();
+        $bookmarkRId = $element->getPhpWord()->addBookmark();
 
         // Bookmark start for TOC
         $xmlWriter->startElement('w:bookmarkStart');
-        $xmlWriter->writeAttribute('w:id', $rId);
+        $xmlWriter->writeAttribute('w:id', $bookmarkRId);
         $xmlWriter->writeAttribute('w:name', "_Toc{$rId}");
         $xmlWriter->endElement();
 
         // Actual text
         $xmlWriter->startElement('w:r');
-        $xmlWriter->startElement('w:t');
-        $xmlWriter->writeRaw($this->getText($element->getText()));
-        $xmlWriter->endElement();
+        if (Settings::isOutputEscapingEnabled()) {
+            $xmlWriter->writeElement('w:t', $this->getText($element->getText()));
+        } else {
+            $xmlWriter->startElement('w:t');
+            $xmlWriter->writeRaw($this->getText($element->getText()));
+            $xmlWriter->endElement();
+        }
         $xmlWriter->endElement();
 
         // Bookmark end
         $xmlWriter->startElement('w:bookmarkEnd');
-        $xmlWriter->writeAttribute('w:id', $rId);
+        $xmlWriter->writeAttribute('w:id', $bookmarkRId);
         $xmlWriter->endElement();
 
         $xmlWriter->endElement();

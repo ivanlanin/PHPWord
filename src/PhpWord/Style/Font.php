@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -223,6 +223,12 @@ class Font extends AbstractStyle
     private $shading;
 
     /**
+     * Right to left languages 
+     * @var boolean
+     */
+    private $rtl = false;
+
+    /**
      * Create new font style
      *
      * @param string $type Type of font
@@ -268,6 +274,7 @@ class Font extends AbstractStyle
                 'kerning'   => $this->getKerning(),
             ),
             'paragraph'     => $this->getParagraph(),
+            'rtl'           => $this->isRTL(),
             'shading'       => $this->getShading(),
         );
 
@@ -731,6 +738,29 @@ class Font extends AbstractStyle
     }
 
     /**
+     * Get rtl
+     *
+     * @return bool
+     */
+    public function isRTL()
+    {
+        return $this->rtl;
+    }
+
+    /**
+     * Set rtl
+     *
+     * @param bool $value
+     * @return self
+     */
+    public function setRTL($value = true)
+    {
+        $this->rtl = $this->setBoolVal($value, $this->rtl);
+
+        return $this;
+    }
+
+    /**
      * Get shading
      *
      * @return \PhpOffice\PhpWord\Style\Shading
@@ -757,6 +787,7 @@ class Font extends AbstractStyle
      * Get bold
      *
      * @deprecated 0.10.0
+     *
      * @codeCoverageIgnore
      */
     public function getBold()
@@ -768,6 +799,7 @@ class Font extends AbstractStyle
      * Get italic
      *
      * @deprecated 0.10.0
+     *
      * @codeCoverageIgnore
      */
     public function getItalic()
@@ -779,6 +811,7 @@ class Font extends AbstractStyle
      * Get superscript
      *
      * @deprecated 0.10.0
+     *
      * @codeCoverageIgnore
      */
     public function getSuperScript()
@@ -790,6 +823,7 @@ class Font extends AbstractStyle
      * Get subscript
      *
      * @deprecated 0.10.0
+     *
      * @codeCoverageIgnore
      */
     public function getSubScript()
@@ -801,6 +835,7 @@ class Font extends AbstractStyle
      * Get strikethrough
      *
      * @deprecated 0.10.0
+     *
      * @codeCoverageIgnore
      */
     public function getStrikethrough()
@@ -812,6 +847,7 @@ class Font extends AbstractStyle
      * Get paragraph style
      *
      * @deprecated 0.11.0
+     *
      * @codeCoverageIgnore
      */
     public function getParagraphStyle()

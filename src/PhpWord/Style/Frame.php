@@ -11,11 +11,13 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Style;
+
+use PhpOffice\PhpWord\SimpleType\Jc;
 
 /**
  * Frame defines the size and position of an object
@@ -36,7 +38,7 @@ class Frame extends AbstractStyle
     const UNIT_PX = 'px'; // Mostly for images
 
     /**
-     * Position type, relative/absolute
+     * General positioning options.
      *
      * @const string
      */
@@ -88,11 +90,9 @@ class Frame extends AbstractStyle
     const WRAP_INFRONT = 'infront';
 
     /**
-     * Alignment
-     *
-     * @var \PhpOffice\PhpWord\Style\Alignment
+     * @var string
      */
-    private $alignment;
+    private $alignment = '';
 
     /**
      * Unit
@@ -178,31 +178,59 @@ class Frame extends AbstractStyle
      */
     public function __construct($style = array())
     {
-        $this->alignment = new Alignment();
         $this->setStyleByArray($style);
     }
 
     /**
-     * Get alignment
+     * @since 0.13.0
      *
      * @return string
      */
-    public function getAlign()
+    public function getAlignment()
     {
-        return $this->alignment->getValue();
+        return $this->alignment;
     }
 
     /**
-     * Set alignment
+     * @since 0.13.0
      *
      * @param string $value
+     *
      * @return self
+     */
+    public function setAlignment($value)
+    {
+        if (Jc::getValidator()->isValid($value)) {
+            $this->alignment = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @deprecated 0.13.0 Use the `getAlignment` method instead.
+     *
+     * @return string
+     *
+     * @codeCoverageIgnore
+     */
+    public function getAlign()
+    {
+        return $this->getAlignment();
+    }
+
+    /**
+     * @deprecated 0.13.0 Use the `setAlignment` method instead.
+     *
+     * @param string $value
+     *
+     * @return self
+     *
+     * @codeCoverageIgnore
      */
     public function setAlign($value = null)
     {
-        $this->alignment->setValue($value);
-
-        return $this;
+        return $this->setAlignment($value);
     }
 
     /**
@@ -338,7 +366,10 @@ class Frame extends AbstractStyle
      */
     public function setPos($value)
     {
-        $enum = array(self::POS_RELATIVE, self::POS_ABSOLUTE);
+        $enum = array(
+            self::POS_ABSOLUTE,
+            self::POS_RELATIVE,
+        );
         $this->pos = $this->setEnumVal($value, $enum, $this->pos);
 
         return $this;
@@ -357,12 +388,21 @@ class Frame extends AbstractStyle
     /**
      * Set horizontal position
      *
+     * @since 0.12.0 "absolute" option is available.
+     *
      * @param string $value
      * @return self
      */
     public function setHPos($value)
     {
-        $enum = array(self::POS_LEFT, self::POS_CENTER, self::POS_RIGHT, self::POS_INSIDE, self::POS_OUTSIDE);
+        $enum = array(
+            self::POS_ABSOLUTE,
+            self::POS_LEFT,
+            self::POS_CENTER,
+            self::POS_RIGHT,
+            self::POS_INSIDE,
+            self::POS_OUTSIDE,
+        );
         $this->hPos = $this->setEnumVal($value, $enum, $this->hPos);
 
         return $this;
@@ -381,12 +421,21 @@ class Frame extends AbstractStyle
     /**
      * Set vertical position
      *
+     * @since 0.12.0 "absolute" option is available.
+     *
      * @param string $value
      * @return self
      */
     public function setVPos($value)
     {
-        $enum = array(self::POS_TOP, self::POS_CENTER, self::POS_BOTTOM, self::POS_INSIDE, self::POS_OUTSIDE);
+        $enum = array(
+            self::POS_ABSOLUTE,
+            self::POS_TOP,
+            self::POS_CENTER,
+            self::POS_BOTTOM,
+            self::POS_INSIDE,
+            self::POS_OUTSIDE,
+        );
         $this->vPos = $this->setEnumVal($value, $enum, $this->vPos);
 
         return $this;
@@ -411,8 +460,14 @@ class Frame extends AbstractStyle
     public function setHPosRelTo($value)
     {
         $enum = array(
-            self::POS_RELTO_MARGIN, self::POS_RELTO_PAGE, self::POS_RELTO_COLUMN, self::POS_RELTO_CHAR,
-            self::POS_RELTO_LMARGIN, self::POS_RELTO_RMARGIN, self::POS_RELTO_IMARGIN, self::POS_RELTO_OMARGIN,
+            self::POS_RELTO_MARGIN,
+            self::POS_RELTO_PAGE,
+            self::POS_RELTO_COLUMN,
+            self::POS_RELTO_CHAR,
+            self::POS_RELTO_LMARGIN,
+            self::POS_RELTO_RMARGIN,
+            self::POS_RELTO_IMARGIN,
+            self::POS_RELTO_OMARGIN,
         );
         $this->hPosRelTo = $this->setEnumVal($value, $enum, $this->hPosRelTo);
 
@@ -438,8 +493,14 @@ class Frame extends AbstractStyle
     public function setVPosRelTo($value)
     {
         $enum = array(
-            self::POS_RELTO_MARGIN, self::POS_RELTO_PAGE, self::POS_RELTO_TEXT, self::POS_RELTO_LINE,
-            self::POS_RELTO_TMARGIN, self::POS_RELTO_BMARGIN, self::POS_RELTO_IMARGIN, self::POS_RELTO_OMARGIN,
+            self::POS_RELTO_MARGIN,
+            self::POS_RELTO_PAGE,
+            self::POS_RELTO_TEXT,
+            self::POS_RELTO_LINE,
+            self::POS_RELTO_TMARGIN,
+            self::POS_RELTO_BMARGIN,
+            self::POS_RELTO_IMARGIN,
+            self::POS_RELTO_OMARGIN,
         );
         $this->vPosRelTo = $this->setEnumVal($value, $enum, $this->vPosRelTo);
 
@@ -465,8 +526,13 @@ class Frame extends AbstractStyle
     public function setWrap($value)
     {
         $enum = array(
-            self::WRAP_INLINE, self::WRAP_SQUARE, self::WRAP_TIGHT, self::WRAP_THROUGH,
-            self::WRAP_TOPBOTTOM, self::WRAP_BEHIND, self::WRAP_INFRONT
+            self::WRAP_INLINE,
+            self::WRAP_SQUARE,
+            self::WRAP_TIGHT,
+            self::WRAP_THROUGH,
+            self::WRAP_TOPBOTTOM,
+            self::WRAP_BEHIND,
+            self::WRAP_INFRONT,
         );
         $this->wrap = $this->setEnumVal($value, $enum, $this->wrap);
 

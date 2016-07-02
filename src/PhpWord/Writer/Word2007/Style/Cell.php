@@ -11,7 +11,7 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -32,7 +32,9 @@ class Cell extends AbstractStyle
     private $width;
 
     /**
-     * Write style
+     * Write style.
+     *
+     * @return void
      */
     public function write()
     {
@@ -88,9 +90,10 @@ class Cell extends AbstractStyle
     }
 
     /**
-     * Set width
+     * Set width.
      *
      * @param int $value
+     * @return void
      */
     public function setWidth($value = null)
     {

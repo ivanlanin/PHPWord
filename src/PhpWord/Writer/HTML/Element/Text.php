@@ -11,12 +11,13 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @copyright   2010-2015 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\HTML\Element;
 
+use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Paragraph;
 use PhpOffice\PhpWord\Writer\HTML\Style\Font as FontStyleWriter;
@@ -72,7 +73,11 @@ class Text extends AbstractElement
         $content .= $this->writeOpening();
         $content .= $this->openingText;
         $content .= $this->openingTags;
-        $content .= htmlspecialchars($element->getText());
+        if (Settings::isOutputEscapingEnabled()) {
+            $content .= $this->escaper->escapeHtml($element->getText());
+        } else {
+            $content .= $element->getText();
+        }
         $content .= $this->closingTags;
         $content .= $this->closingText;
         $content .= $this->writeClosing();
@@ -81,9 +86,10 @@ class Text extends AbstractElement
     }
 
     /**
-     * Set opening text
+     * Set opening text.
      *
      * @param string $value
+     * @return void
      */
     public function setOpeningText($value)
     {
@@ -91,9 +97,10 @@ class Text extends AbstractElement
     }
 
     /**
-     * Set closing text
+     * Set closing text.
      *
      * @param string $value
+     * @return void
      */
     public function setClosingText($value)
     {
@@ -128,7 +135,12 @@ class Text extends AbstractElement
     {
         $content = '';
         if (!$this->withoutP) {
-            $content .= $this->closingText;
+            if (Settings::isOutputEscapingEnabled()) {
+                $content .= $this->escaper->escapeHtml($this->closingText);
+            } else {
+                $content .= $this->closingText;
+            }
+
             $content .= "</p>" . PHP_EOL;
         }
 
@@ -164,7 +176,9 @@ class Text extends AbstractElement
     }
 
     /**
-     * Get font style
+     * Get font style.
+     *
+     * @return void
      */
     private function getFontStyle()
     {

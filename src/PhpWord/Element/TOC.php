@@ -11,8 +11,8 @@
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
  * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
- * @license     http://www.gnu.org/licenses/lgpl.txt LGPL
+ * @copyright   2010-2015 PHPWord contributors
+ * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Element;
@@ -129,9 +129,10 @@ class TOC extends AbstractElement
     }
 
     /**
-     * Set max depth
+     * Set max depth.
      *
      * @param int $value
+     * @return void
      */
     public function setMaxDepth($value)
     {
@@ -149,9 +150,10 @@ class TOC extends AbstractElement
     }
 
     /**
-     * Set min depth
+     * Set min depth.
      *
      * @param int $value
+     * @return void
      */
     public function setMinDepth($value)
     {

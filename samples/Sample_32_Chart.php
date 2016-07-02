@@ -4,9 +4,10 @@ include_once 'Sample_Header.php';
 use PhpOffice\PhpWord\Shared\Converter;
 
 // New Word document
-echo date('H:i:s'), " Create new PhpWord object", EOL;
-
+echo date('H:i:s'), ' Create new PhpWord object', EOL;
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
+
+// Define styles
 $phpWord->addTitleStyle(1, array('size' => 14, 'bold' => true), array('keepNext' => true, 'spaceBefore' => 240));
 $phpWord->addTitleStyle(2, array('size' => 14, 'bold' => true), array('keepNext' => true, 'spaceBefore' => 240));
 
@@ -26,9 +27,7 @@ $series3 = array(8, 3, 2, 5, 4);
 foreach ($chartTypes as $chartType) {
     $section->addTitle(ucfirst($chartType), 2);
     $chart = $section->addChart($chartType, $categories, $series1);
-    $chart->getStyle()
-        ->setWidth(Converter::inchToEmu(2.5))
-        ->setHeight(Converter::inchToEmu(2));
+    $chart->getStyle()->setWidth(Converter::inchToEmu(2.5))->setHeight(Converter::inchToEmu(2));
     if (in_array($chartType, $twoSeries)) {
         $chart->addSeries($categories, $series2);
     }
